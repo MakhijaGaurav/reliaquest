@@ -49,7 +49,7 @@ class IEmployeeControllerImplTest {
         Assertions.assertEquals("Test1", employees.get(0).getEmployee_name());
         Assertions.assertEquals("1", employees.get(0).getId());
         Assertions.assertEquals("Test2", employees.get(1).getEmployee_name());
-        Assertions.assertEquals("2", employees.get(0).getId());
+        Assertions.assertEquals("2", employees.get(1).getId());
     }
 
     @Test
