@@ -1,2 +1,10 @@
 spring.application.name: employee-api
 server.port: 8111
+
+employee-server:
+  hostname: http://localhost:8112
+  path:
+    employee: '/api/v1/employee'
+    get-all-employees: '/api/v1/employee'
+    get-employee-by-id: '/api/v1/employee/%s'
+
