@@ -1,8 +1,6 @@
-package com.reliaquest.api.controller;
+package com.reliaquest.api;
 
-import com.reliaquest.api.dto.CreateEmployeeRequest;
-import com.reliaquest.api.dto.DeleteEmployeeRequest;
-import com.reliaquest.api.dto.Employee;
+import com.reliaquest.api.dto.*;
 import java.util.List;
 
 public class TestFixtures {
@@ -38,5 +36,19 @@ public class TestFixtures {
     public static DeleteEmployeeRequest returnDeleteEmployeeRequest() {
         DeleteEmployeeRequest deleteEmployeeRequest = new DeleteEmployeeRequest("Test1");
         return deleteEmployeeRequest;
+    }
+
+    public static ServerResponseList returnServerResponseList() {
+        ServerResponseList serverResponseList = new ServerResponseList();
+        serverResponseList.setData(getAllEmployees());
+        serverResponseList.setStatus("Successfully processed request");
+        return serverResponseList;
+    }
+
+    public static ServerResponseEmployee returnServerResponseEmployee() {
+        ServerResponseEmployee responseEmployee = new ServerResponseEmployee();
+        responseEmployee.setData(getAllEmployees().get(0));
+        responseEmployee.setStatus("Successfully processed request");
+        return responseEmployee;
     }
 }

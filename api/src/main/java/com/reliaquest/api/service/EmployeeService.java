@@ -1,6 +1,7 @@
 package com.reliaquest.api.service;
 
 import com.reliaquest.api.dto.*;
+import com.reliaquest.api.exception.EmployeeException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -32,9 +34,20 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployees() {
         HttpEntity entity = new HttpEntity(null);
-        ResponseEntity<ServerResponseList> result = restTemplate.exchange(
-                getAllEmployeesUri, HttpMethod.GET, entity, new ParameterizedTypeReference<ServerResponseList>() {});
-        return result.getBody().getData();
+        try {
+            ResponseEntity<ServerResponseList> result = restTemplate.exchange(
+                    getAllEmployeesUri,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<ServerResponseList>() {});
+            if (result.getStatusCode().is2xxSuccessful()) {
+                return result.getBody().getData();
+            } else {
+                throw new EmployeeException(result.getStatusCode().toString());
+            }
+        } catch (RestClientException e) {
+            throw new EmployeeException(e.getMessage(), e);
+        }
     }
 
     public List<Employee> getAllEmployeesByNameSearch(String searchString) {
@@ -48,9 +61,19 @@ public class EmployeeService {
     public Employee getEmployeeById(String id) {
         HttpEntity entity = new HttpEntity(null);
         String path = String.format(getEmployeeByIdUri, id);
-        ResponseEntity<ServerResponseEmployee> result = restTemplate.exchange(
-                path, HttpMethod.GET, entity, new ParameterizedTypeReference<ServerResponseEmployee>() {});
-        return result.getBody().getData();
+        try {
+            ResponseEntity<ServerResponseEmployee> result = restTemplate.exchange(
+                    path, HttpMethod.GET, entity, new ParameterizedTypeReference<ServerResponseEmployee>() {});
+            if (result.getStatusCode().is2xxSuccessful()) {
+                return result.getBody().getData();
+            } else if (result.getStatusCode().is4xxClientError()) {
+                throw new EmployeeException("Invalid Employee Id");
+            } else {
+                throw new EmployeeException(result.getBody().getStatus());
+            }
+        } catch (RestClientException e) {
+            throw new EmployeeException("Failed to fetch employee", e);
+        }
     }
 
     public Integer getHighestSalaryOfEmployees() {

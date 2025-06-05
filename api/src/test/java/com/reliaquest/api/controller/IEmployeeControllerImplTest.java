@@ -1,12 +1,13 @@
 package com.reliaquest.api.controller;
 
-import static com.reliaquest.api.controller.TestFixtures.returnCreateEmployeeRequest;
+import static com.reliaquest.api.TestFixtures.returnCreateEmployeeRequest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reliaquest.api.TestFixtures;
 import com.reliaquest.api.dto.Employee;
 import com.reliaquest.api.service.EmployeeService;
 import java.util.List;
@@ -132,9 +133,9 @@ class IEmployeeControllerImplTest {
 
     @Test
     void deleteEmployeeById() throws Exception {
-        when(employeeService.deleteEmployeeById("1")).thenReturn("true");
+        when(employeeService.deleteEmployeeById("Test1")).thenReturn("true");
         MvcResult mvcResult = this.mockMvc
-                .perform(delete("/employee/1"))
+                .perform(delete("/employee/Test1"))
                 .andExpect(status().isOk())
                 .andReturn();
         String result =
